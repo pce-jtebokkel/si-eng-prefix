@@ -144,7 +144,7 @@ class EngDecimal(decimal.Decimal):
 
         return sign + intpart + fracpart + exp
 
-    def to_si_string(self, context=None):
+    def to_si_string(self, context=None, hidesym=''):
         """Convert to SI prefix-type string.
 
         Use the SI prefix to represent the exponent part of the number.
@@ -161,11 +161,11 @@ class EngDecimal(decimal.Decimal):
             exp = 0
         exp = int(exp)
         pre = [x for x in SI_PREFIXES if x.exp == exp]
-        if pre[0].symbol == '':
+        if pre[0].symbol == hidesym:
             return n
         return n + ' ' + pre[0].symbol
 
-def dec_to_si_string(dec):
+def dec_to_si_string(dec, hidesym=''):
     """Convert to SI prefix-type string.
 
     Use the SI prefix to represent the exponent part of the number.
@@ -182,6 +182,6 @@ def dec_to_si_string(dec):
         exp = 0
     exp = int(exp)
     pre = [x for x in SI_PREFIXES if x.exp == exp]
-    if pre[0].symbol == '':
+    if pre[0].symbol == hidesym:
         return n
     return n + ' ' + pre[0].symbol
