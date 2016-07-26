@@ -59,36 +59,36 @@ CRE_SI_NUMBER = re.compile(r'\s*(?P<sign>[\+\-><])?'
 
 class EngDecimal(decimal.Decimal):
     def __new__(cls, value="0", context=None, prefix=None):
-        try:
-            self = super(EngDecimal, cls).__new__(cls, value=value, context=context)
-        except (decimal.ConversionSyntax, decimal.InvalidOperation) as e:
-            self = object.__new__(cls)
+        self = object.__new__(cls)
 
-            if isinstance(value, str) or isinstance(value, unicode):
-                m = CRE_SI_NUMBER(value.strip())
-                if m is None:
-                    raise e
-
-                if m.group('sign') == '-':
-                    self._sign = 1
-                else:
-                    self._sign = 0
-                intpart = m.group('integer')
-                if intpart is not None:
-                    fracpart = m.group('fraction') or ''
-                    _prefix = [x for x in SI_PREFIXES if x.symbol == m.group('sipre')]
-                    if len(_prefix) > 0:
-                        _prefix = _prefix[0]
-                    else:
-                        _prefix = prefix or NO_PREFIX
-                    self._int = str(int(intpart+fracpart))
-                    self._exp = _prefix.exp - len(fracpart)
-                    self._is_special = False
-                    self.prefix = _prefix
+        if isinstance(value, str) or isinstance(value, unicode):
+            m = CRE_SI_NUMBER(value.strip())
+            if m.group('sipre') is None:
+                self = super(EngDecimal, cls).__new__(cls, value=value, context=context)
+                self.prefix = NO_PREFIX
                 return self
-            raise e
-        self.prefix = prefix or NO_PREFIX
-        self._exp += self.prefix.exp
+
+            if m.group('sign') == '-':
+                self._sign = 1
+            else:
+                self._sign = 0
+            intpart = m.group('integer')
+            if intpart is not None:
+                fracpart = m.group('fraction') or ''
+                _prefix = [x for x in SI_PREFIXES if x.symbol == m.group('sipre')]
+                if len(_prefix) > 0:
+                    _prefix = _prefix[0]
+                else:
+                    _prefix = prefix or NO_PREFIX
+                self._int = str(int(intpart+fracpart))
+                self._exp = _prefix.exp - len(fracpart)
+                self._is_special = False
+                self.prefix = _prefix
+            return self
+        else:
+            self = super(EngDecimal, cls).__new__(cls, value=value, context=context)
+            self.prefix = prefix or NO_PREFIX
+            self._exp += self.prefix.exp
         return self
 
     def __str__(self, eng=False, context=None):
