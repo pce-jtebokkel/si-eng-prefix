@@ -16,7 +16,7 @@ MEGA = Prefix('mega', 'M', 6)
 KILO = Prefix('kilo', 'k', 3)
 HECTO = Prefix('hecto', 'h', 2)
 DECA = Prefix('deca', 'da', 1)
-NO_PREFIX = Prefix('', '', 0)
+NO_PREFIX = Prefix('', 'e+0', 0)
 DECI = Prefix('deci', 'd', -1)
 CENTI = Prefix('centi', 'c', -2)
 MILLI = Prefix('milli', 'm', -3)
@@ -49,11 +49,12 @@ SI_PREFIXES = [YOTTA,
                ATTO,
                ZEPTO,
                YOCTO]
-SI_PREFIX_SYM = [x.symbol for x in SI_PREFIXES]
+SI_PREFIX_SYM = [x.symbol for x in SI_PREFIXES if x.symbol not in ('e+0', 'da')]
+
 CRE_SI_NUMBER = re.compile(r'\s*(?P<sign>[\+\-><])?'
                            r'(?P<integer>\d*)'
                            r'(\.(?P<fraction>\d*))?'
-                           r'\s*(?P<sipre>[%s])?\s*' % ''.join(SI_PREFIX_SYM)).match
+                           r'\s*(?P<sipre>e\+0|da|[%s])?\s*' % ''.join(SI_PREFIX_SYM)).match
 
 
 class EngDecimal(decimal.Decimal):
