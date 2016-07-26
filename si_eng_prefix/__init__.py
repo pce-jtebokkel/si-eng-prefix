@@ -50,7 +50,7 @@ SI_PREFIXES = [YOTTA,
                ZEPTO,
                YOCTO]
 SI_PREFIX_SYM = [x.symbol for x in SI_PREFIXES]
-CRE_SI_NUMBER = re.compile(r'\s*(?P<sign>[\+\-])?'
+CRE_SI_NUMBER = re.compile(r'\s*(?P<sign>[\+\-><])?'
                            r'(?P<integer>\d*)'
                            r'(\.(?P<fraction>\d*))?'
                            r'\s*(?P<sipre>[%s])?\s*' % ''.join(SI_PREFIX_SYM)).match
