@@ -63,7 +63,7 @@ class EngDecimal(decimal.Decimal):
         except (decimal.ConversionSyntax, decimal.InvalidOperation) as e:
             self = object.__new__(cls)
 
-            if isinstance(value, str):
+            if isinstance(value, str) or isinstance(value, unicode):
                 m = CRE_SI_NUMBER(value.strip())
                 if m is None:
                     raise e
