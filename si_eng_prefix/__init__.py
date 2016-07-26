@@ -65,7 +65,8 @@ class EngDecimal(decimal.Decimal):
             m = CRE_SI_NUMBER(value.strip())
             if m.group('sipre') is None:
                 self = super(EngDecimal, cls).__new__(cls, value=value, context=context)
-                self.prefix = NO_PREFIX
+                self.prefix = prefix or NO_PREFIX
+                self._exp += self.prefix.exp
                 return self
 
             if m.group('sign') == '-':
