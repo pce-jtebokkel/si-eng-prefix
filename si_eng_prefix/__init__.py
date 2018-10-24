@@ -92,7 +92,7 @@ class EngDecimal(decimal.Decimal):
             self._exp += self.prefix.exp
         return self
 
-    def __str__(self, eng=False, context=None):
+    def __str__(self, eng=False, context=None, asprefix=None):
         """Return string representation of the number in scientific notation.
 
         Captures all of the information in the underlying representation.
@@ -108,7 +108,12 @@ class EngDecimal(decimal.Decimal):
                 return sign + 'sNaN' + self._int
 
         # number of digits of self._int to left of decimal point
-        leftdigits = self._exp + len(self._int)
+        if asprefix is None:
+            leftdigits = self._exp + len(self._int)
+            sym = ''
+        else:
+            leftdigits = self._exp - asprefix.exp + len(self._int)
+            sym = ' ' + asprefix.symbol
 
         # dotplace is number of digits of self._int to the left of the
         # decimal point in the mantissa of the output string (that is,
@@ -142,28 +147,31 @@ class EngDecimal(decimal.Decimal):
                 context = decimal.getcontext()
             exp = ['e', 'E'][context.capitals] + "%+d" % (leftdigits-dotplace)
 
-        return sign + intpart + fracpart + exp
+        return sign + intpart + fracpart + exp + sym
 
-    def to_si_string(self, context=None, hidesym=''):
+    def to_si_string(self, context=None, hidesym='', asprefix=None):
         """Convert to SI prefix-type string.
 
         Use the SI prefix to represent the exponent part of the number.
         """
-        sEng = self.__str__(eng=True, context=context)
-        n = None
-        exp = None
-        if 'E' in sEng:
-            n, exp = sEng.split('E')
-        elif 'e' in sEng:
-            n, exp = sEng.split('e')
+        if asprefix is None:
+            sEng = self.__str__(eng=True, context=context)
+            n = None
+            exp = None
+            if 'E' in sEng:
+                n, exp = sEng.split('E')
+            elif 'e' in sEng:
+                n, exp = sEng.split('e')
+            else:
+                n = sEng
+                exp = 0
+            exp = int(exp)
+            pre = [x for x in SI_PREFIXES if x.exp == exp]
+            if pre[0].symbol == hidesym:
+                return n
+            return n + ' ' + pre[0].symbol
         else:
-            n = sEng
-            exp = 0
-        exp = int(exp)
-        pre = [x for x in SI_PREFIXES if x.exp == exp]
-        if pre[0].symbol == hidesym:
-            return n
-        return n + ' ' + pre[0].symbol
+            return self.__str__(eng=True, context=context, asprefix=asprefix)
 
 def dec_to_si_string(dec, hidesym=''):
     """Convert to SI prefix-type string.
