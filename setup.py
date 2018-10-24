@@ -7,7 +7,7 @@ requires = []
 
 
 setup(name='SI Engineering Prefix',
-      version='0.1',
+      version='0.2',
       description='SI Engineering Prefix',
       classifiers=[
         "Programming Language :: Python",
