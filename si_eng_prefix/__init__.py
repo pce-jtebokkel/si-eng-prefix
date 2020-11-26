@@ -1,4 +1,4 @@
-from __future__ import division
+
 
 import decimal
 import re
@@ -61,7 +61,7 @@ class EngDecimal(decimal.Decimal):
     def __new__(cls, value="0", context=None, prefix=None):
         self = object.__new__(cls)
 
-        if isinstance(value, str) or isinstance(value, unicode):
+        if isinstance(value, str) or isinstance(value, str):
             m = CRE_SI_NUMBER(value.strip())
             if m.group('sipre') is None:
                 self = super(EngDecimal, cls).__new__(cls, value=value, context=context)
