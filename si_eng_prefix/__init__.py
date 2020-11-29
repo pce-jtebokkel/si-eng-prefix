@@ -1,4 +1,4 @@
-import decimal
+import _pydecimal as decimal
 import re
 
 from collections import namedtuple
@@ -62,7 +62,7 @@ CRE_SI_NUMBER = re.compile(
 
 class EngDecimal(decimal.Decimal):
     def __new__(cls, value="0", context=None, prefix=None):
-        self = decimal.Decimal.__new__()
+        self = decimal.Decimal.__new__(cls)
 
         if isinstance(value, str):
             m = CRE_SI_NUMBER(value.strip())
