@@ -62,7 +62,7 @@ CRE_SI_NUMBER = re.compile(
 
 class EngDecimal(decimal.Decimal):
     def __new__(cls, value="0", context=None, prefix=None):
-        self = object.__new__(cls)
+        self = decimal.Decimal.__new__()
 
         if isinstance(value, str):
             m = CRE_SI_NUMBER(value.strip())
