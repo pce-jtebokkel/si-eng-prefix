@@ -1,4 +1,19 @@
-import _pydecimal as decimal
+try:
+    import _pydecimal as decimal
+except ImportError:
+    import decimal
+
+try:
+    trial = decimal.Decimal("0")
+    # try and modify internal variable
+    trial._exp += 1
+except Exception:
+    raise ImportError(
+        "We require a version of decimal that gives us access to internal properties"
+    )
+else:
+    del trial
+
 import re
 
 from collections import namedtuple
