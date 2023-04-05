@@ -192,6 +192,9 @@ class EngDecimal(decimal.Decimal):
         else:
             return self.__str__(eng=True, context=context, asprefix=asprefix)
 
+    def as_base_prefix(self, prefix):
+        return self / pow(10, self.prefix.exp - prefix.exp)
+
 
 def dec_to_si_string(dec, hidesym=""):
     """Convert to SI prefix-type string.
