@@ -67,12 +67,13 @@ SI_PREFIXES = [
 ]
 SI_PREFIX_SYM = [x.symbol for x in SI_PREFIXES if x.symbol not in ("e+0", "da")]
 
-CRE_SI_NUMBER = re.compile(
+REGEX_CRE_SI_NUMBER = re.compile(
     r"\s*(?P<sign>[\+\-><])?"
     r"(?P<integer>\d*)"
     r"(\.(?P<fraction>\d*))?"
     r"\s*(?P<sipre>e\+0|da|[%s])?\s*" % "".join(SI_PREFIX_SYM)
-).match
+)
+CRE_SI_NUMBER = REGEX_CRE_SI_NUMBER.match
 
 
 class EngDecimal(decimal.Decimal):
