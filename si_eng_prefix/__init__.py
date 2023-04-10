@@ -193,7 +193,8 @@ class EngDecimal(decimal.Decimal):
             return self.__str__(eng=True, context=context, asprefix=asprefix)
 
     def as_base_prefix(self, prefix):
-        return self / pow(10, self.prefix.exp - prefix.exp)
+        self._exp -= prefix.exp
+        return self
 
 
 def dec_to_si_string(dec, hidesym=""):
