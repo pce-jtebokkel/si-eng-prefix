@@ -1,12 +1,12 @@
 import os
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 requires = []
 
 setup(
     name="si-eng-prefix",
-    version="0.3.3",
+    version="0.4.0",
     description="SI Engineering Prefix",
     classifiers=[
         "Programming Language :: Python",
