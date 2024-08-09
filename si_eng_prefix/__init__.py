@@ -15,10 +15,15 @@ else:
     del trial
 
 import re
+from dataclasses import dataclass
 
-from collections import namedtuple
 
-Prefix = namedtuple("Prefix", "name symbol exp")
+@dataclass
+class Prefix:
+    name: str
+    symbol: str
+    exp: int
+
 
 YOTTA = Prefix("yotta", "Y", 24)
 ZETTA = Prefix("zetta", "Z", 21)
@@ -77,7 +82,12 @@ CRE_SI_NUMBER = REGEX_CRE_SI_NUMBER.match
 
 
 class EngDecimal(decimal.Decimal):
-    def __new__(cls, value="0", context=None, prefix=None):
+    def __new__(
+        cls,
+        value: str | float | int = "0",
+        context: decimal.Context | None = None,
+        prefix: Prefix | None = None,
+    ) -> "EngDecimal":
         self = decimal.Decimal.__new__(cls)
 
         if isinstance(value, str):
@@ -111,7 +121,12 @@ class EngDecimal(decimal.Decimal):
             self._exp += self.prefix.exp
         return self
 
-    def __str__(self, eng=False, context=None, asprefix=None):
+    def __str__(
+        self,
+        eng: bool = False,
+        context: decimal.Context | None = None,
+        asprefix: Prefix | None = None,
+    ) -> str:
         """Return string representation of the number in scientific notation.
 
         Captures all of the information in the underlying representation.
@@ -168,7 +183,12 @@ class EngDecimal(decimal.Decimal):
 
         return sign + intpart + fracpart + exp + sym
 
-    def to_si_string(self, context=None, hidesym="", asprefix=None):
+    def to_si_string(
+        self,
+        context: decimal.Context | None = None,
+        hidesym: str = "",
+        asprefix: Prefix | None = None,
+    ) -> str:
         """Convert to SI prefix-type string.
 
         Use the SI prefix to represent the exponent part of the number.
@@ -192,12 +212,12 @@ class EngDecimal(decimal.Decimal):
         else:
             return self.__str__(eng=True, context=context, asprefix=asprefix)
 
-    def as_base_prefix(self, prefix):
+    def as_base_prefix(self, prefix: Prefix) -> "EngDecimal":
         self._exp -= prefix.exp
         return self
 
 
-def dec_to_si_string(dec, hidesym=""):
+def dec_to_si_string(dec: decimal.Decimal, hidesym: str = "") -> str:
     """Convert to SI prefix-type string.
 
     Use the SI prefix to represent the exponent part of the number.
